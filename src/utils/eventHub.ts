@@ -13,7 +13,7 @@ if (!trkEventHubConnectionString) {
 }
 
 const options: EventHubBufferedProducerClientOptions = {
-    maxEventBufferLengthPerPartition: 1500,
+    maxEventBufferLengthPerPartition: parseInt(process.env.MAX_EVENT_BUFFER_LENGTH_PER_PARTITION || "") || 1500,
     onSendEventsErrorHandler: (errorInfo) => {
         console.error("Failed to send events:", errorInfo.error);
         console.error("Events that failed to send:", errorInfo.events);
@@ -21,7 +21,7 @@ const options: EventHubBufferedProducerClientOptions = {
     onSendEventsSuccessHandler: (successInfo) => {
         console.log("Successfully sent events:", successInfo.events);
     },
-    maxWaitTimeInMs: 50,
+    maxWaitTimeInMs: parseInt(process.env.BUFFERED_PRODUCER_CLIENT_MAX_WAIT_TIME_MS || "") || 50,
     retryOptions: {
         maxRetries: 2,
         retryDelayInMs: 250
