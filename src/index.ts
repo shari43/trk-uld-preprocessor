@@ -33,7 +33,7 @@ app.post('/ingress/:type', async (req: Request, res: Response) => {
 
         const bodyObject = req.body;
         const result: Success = await processEvent(bodyObject);
-        return res.status(result.statusCode).send({ message: result.message });
+        return res.status(result.statusCode).send(result.message);
 
     } catch (err) {
         req.log.error(err, `Error processing event.`);
