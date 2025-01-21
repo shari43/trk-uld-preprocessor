@@ -5,8 +5,9 @@ import { sanitizeMeshPacket, sanitizeProxPacket } from '../functions/sanitize';
 import { HttpError } from '../classes/error';
 import { bufferToEventHub } from '../utils/eventHub';
 import { Success } from '../classes/success';
-import { isValidValue } from '../utils/utils';
+import { isValidValue, randomlyGenerateClatClon } from '../utils/utils';
 import logger from '../logger';
+import { getSettingsResponse } from '../utils/deviceData/fetchDeviceData';
 
 export const processEvent = async (bodyObject: any): Promise<Success | HttpError> => {
 
@@ -34,7 +35,34 @@ export const processEvent = async (bodyObject: any): Promise<Success | HttpError
         packet.eventType = eventType;
         const events: Array<UldMeshPacket | UldProxPacket> = [packet];
         logger.info({ events }, `EVENTS`);
-        return await bufferToEventHub(events);
+        await bufferToEventHub(events);
+        const success = new Success('OK', 200);
+        const cellLocationInfo = randomlyGenerateClatClon();
+        success.cellLocation = {
+            ts: cellLocationInfo.ts,
+            lat: cellLocationInfo.clat,
+            lon: cellLocationInfo.clon
+        };
+
+        if ([eventTypes.DIRECT, eventTypes.INDIRECT].includes(eventType)) {
+            try {
+                const response = await getSettingsResponse(packet.id, Number(packet.ackTs));
+                if (response) {
+                    const { ackTs, settings } = response;
+                    success.ackTs = ackTs;
+                    success.settings = settings;
+                }
+            } catch (err) {
+                if (err instanceof Error) {
+                    logger.error({ message: err.message }, `Error getting settings for device.`);
+                } else {
+                    logger.error({ message: err }, `Error getting settings for device.`);
+                }
+            }
+            
+        }
+
+        return success;
 
     } catch (err) {
         logger.error(err, `Error: processEvent: Failed to process packet.`);

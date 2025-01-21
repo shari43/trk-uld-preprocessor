@@ -52,6 +52,7 @@ export const sanitizeProxPacket = (body: any): UldProxPacket => {
         { field: 'G6', type: 'string' },
         { field: 'morepids', type: 'string' },
         { field: 'VersionInfo', type: 'string' },
+        { field: 'ackTs', type: 'number' }
     ];
 
     for (const { field, type } of expectedFields) {

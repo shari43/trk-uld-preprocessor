@@ -31,5 +31,6 @@ export interface UldProxPacket {
     G4?: string;
     G5?: string;
     G6?: string;
+    ackTs?: number;
     [key: string]: string | number | undefined;
 };

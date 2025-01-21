@@ -49,6 +49,6 @@ export const bufferToEventHub = async (proxPackets: Array<UldMeshPacket | UldPro
         throw new HttpError(`Error buffering packet.`, 500);
     }
 
-    return new Success(`OK`, 200);
+    return;
 
 }

@@ -10,7 +10,10 @@
     "serve": "node dist/index.js",
     "lint": "eslint 'src/**/*.{js,ts}'",
     "format": "prettier --write 'src/**/*.{js,ts,json,css}'",
-    "docker-run": "docker build -t trk-uld-preprocessor . && docker run -p 7575:7575 trk-uld-preprocessor"
+    "docker-run": "docker build -t trk-uld-preprocessor . && docker run -p 7575:7575 trk-uld-preprocessor",
+    "docker-build": "docker build -t trkuldpoccr.azurecr.io/preprocessor:${TAG} .",
+    "docker-push": "docker push trkuldpoccr.azurecr.io/preprocessor:${TAG}",
+    "docker-build-and-push": "npm run docker-build && npm run docker-push"
   },
   "keywords": [],
   "author": "",
@@ -20,12 +23,14 @@
     "body-parser": "^1.20.2",
     "dotenv": "^16.4.5",
     "express": "^4.21.0",
+    "mssql": "^11.0.1",
     "pino": "^9.4.0",
     "pino-http": "^10.3.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",
     "@types/express": "^4.17.21",
+    "@types/mssql": "^9.1.5",
     "@types/node": "^22.5.4",
     "@types/pino": "^7.0.5",
     "@typescript-eslint/eslint-plugin": "^8.7.0",
