@@ -11,7 +11,6 @@ import { requestTypes } from './utils/constants';
 import { processEvent } from './functions/process';
 import { Success } from './classes/success';
 import { HttpError } from './classes/error';
-import { initializePool } from './utils/deviceData/db/connection';
 
 const app = express();
 const port = process.env.PORT || 7575;
@@ -19,19 +18,6 @@ const port = process.env.PORT || 7575;
 // Middleware to parse JSON bodies
 app.use(bodyParser.json());
 app.use(pinohttp({ logger }));
-
-(async () => {
-    try {
-        await initializePool();
-    } catch (error) {
-        if (error instanceof Error) {
-            console.error("Application startup failed:", error.message);
-        } else {
-            console.error("Application startup failed:", error);
-        }
-        process.exit(1);
-    }
-})();
 
 // Simple route for testing
 app.post('/ingress/:type', async (req: Request, res: Response) => {
